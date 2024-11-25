@@ -1,0 +1,349 @@
+<?php
+// Start the session
+session_start();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Urban Tech Revulation</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.min2.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="../css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="rent.css">
+</head>
+
+<body>
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3">
+            <nav class="navbar bg-secondary navbar-dark">
+                <a href="../admIndex.php" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary" style="color: #EB1616"><i class="fa fa-user-edit me-2"></i>Urban Tech</h3>
+                </a>
+
+                <div class="navbar-nav w-100">
+                    <a href="../admIndex.php" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <div class="sidebarCall" id="sidebarCall">
+
+                        <!--?php include "../sidebarContent.php" ?-->
+
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Profile</a>
+                            <div class="dropdown-menu bg-transparent border-0">
+                                <a href="../ebill/index.php" class="dropdown-item">Payment</a>
+                                <a href="../index.php" class="dropdown-item">Log Out</a>
+                            </div>
+                        </div>
+                        <a href="../RentPHP/rent.php" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Rent</a>
+                        <a href="rent.php" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i> Spectacular Place</a>
+                        <a href="../shopping/indexAdmin.php" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Shopping</a>
+                            <!--<a href="#" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Setting</a>-->
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Others</a>
+                            <div class="dropdown-menu bg-transparent border-0">
+                                <a href="#" class="dropdown-item">404 Error</a>
+                                <a href="#" class="dropdown-item">Blank Page</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+                <a href="index.php" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <div class="">
+                    <p class="pp">ADMIN</p>
+                    <style>
+                        .pp {
+                            color: goldenrod;
+                            font-weight: 900;
+                            font-size: 25px;
+                            padding: 13px 0px 0px 10px;
+                        }
+
+                        .messateTxt {
+                            color: black;
+                        }
+                    </style>
+                </div>
+                <div class="navbar-nav align-items-center ms-auto">
+
+                    <!--FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF-->
+                    <?php
+                    // Establish a connection to MySQL database
+                    $servername = "localhost";
+                    $username = "root";
+                    $password = "";
+                    $dbname = "urbancityrevolution";
+
+                    // Create connection
+                    $conn = new mysqli($servername, $username, $password, $dbname);
+
+                    // Check connection
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+
+                    // Check if the user is logged in and the email is set in the session
+                    if (isset($_SESSION['adminEmail'])) {
+                        $email = $_SESSION['adminEmail'];
+
+                        // Query to fetch user information based on email
+                        $sql = "SELECT firstname, lastname, image FROM adminreg WHERE email = '$email'";
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            $row = $result->fetch_assoc();
+                            $userImage = $row['image'];
+                            $userName = $row['firstname'];
+                            $userLastName = $row['lastname'];
+                        }
+                    }
+                    ?>
+
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <?php if (isset($userImage)) : ?>
+                                <img class="rounded-circle me-lg-2" src="../<?php echo $userImage; ?>" alt="" style="width: 40px; height: 40px;">
+                            <?php else : ?>
+                                <img class="rounded-circle me-lg-2" src="../img/default-img.jpg" alt="" style="width: 40px; height: 40px;">
+                            <?php endif; ?>
+                            <span class="d-none d-lg-inline-flex">
+                                <?php
+                                // marge first_Name and Last_Name (Allah map koro... r pari na);
+                                if (isset($userName) && isset($userLastName)) {
+                                    echo $userName . ' ' . $userLastName;
+                                } elseif (isset($userName)) {
+                                    echo $userName;
+                                } else {
+                                    echo '';
+                                }
+                                ?>
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                            <a href="../adminMyProfile.php" class="dropdown-item">My Profile</a>
+                                <!--<a href="#" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Setting</a>-->
+                            <a href="../index.php" class="dropdown-item" name="logout">Log Out</a>
+                        </div>
+
+                        <?php
+                        if (isset($_POST["logout"])) {
+                            session_destroy();
+                            header("location: index.php");
+                            exit();
+                        }
+                        ?>
+                    </div>
+
+                    <!--FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF (done after try 47 times :)-->
+
+
+                </div>
+            </nav>
+            <!-- Navbar End -->
+            <style>
+                .formatting .h6 {
+                    text-align: center;
+                    margin: auto;
+                }
+
+                .formatting h6 {
+                    padding-top: 93px;
+                }
+            </style>
+            <!-- clender and vgtID Start -->
+
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-2 fixed-div">
+                        <div class="h-100 bg-secondary rounded p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-4 formatting">
+                                <h6 class="mb-0 logsubtxt h6">Rent Setting</h6>
+                            </div>
+                            <div class="list-group">
+                                <a href="#" id="loadForm" class="list-group-item list-group-item-action">Add Place Info</a>
+                                <a href="#" id="loadFormEdit" class="list-group-item list-group-item-action">Edit Place Info</a>
+                                <a href="#" id="houseDelet" class="list-group-item list-group-item-action">Delete Place Info</a>
+                                <!--<a href="#" class="list-group-item list-group-item-action">Search House</a>-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff--->
+                    <div class="col-10">
+                        <div class="h-100 bg-secondary rounded p-4">
+                            <h1 class="text-center text-danger " style="font-family: 'Abril Fatface', cursive;"> Spectacular Place</h1>
+
+                            <!--show Record deleted successfully-->
+                            <?php
+                            // Check if a message is passed in the URL
+                            if (isset($_GET['message'])) {
+                                $message = urldecode($_GET['message']);
+                                echo '<div id="successMessage" style="text-align: center; margin-top: 20px; font-size: 18px; color: Green;">' . $message . '</div>';
+                                echo '<script> <!--set timer for auto delete message-->
+                                            setTimeout(function(){
+                                            window.location.href = "rent.php";
+                                            }, 3000); // 3 seconds
+                                      </script>';
+                            }
+                            // Other content of rent.php
+                            ?>
+
+                            <!--show Record deleted successfully END-->
+
+                            <div class="addFromjs" id="addForm">
+
+                            </div>
+
+                            <div class="row">
+                                <!--update v=0.2--------------Start-->
+                                <?php
+                                $con = mysqli_connect('localhost', 'root', '', 'urbancityrevolution');
+
+                                if (!$con) {
+                                    echo "Connection failed: " . mysqli_connect_error();
+                                }
+
+                                $query = "SELECT houseId, name, image, date, time, amount FROM spectacularplace ORDER BY id DESC";
+                                //$query = "SELECT houseId, name, image, date, time, amount FROM spectacularplace ORDER BY id ASC"; ----------Rent Card;
+                                $queryfire = mysqli_query($con, $query);
+
+                                if ($queryfire) {
+                                    while ($product = mysqli_fetch_assoc($queryfire)) {
+                                        $houseId = $product['houseId']; // Get the houseId //-------Start------------find id and match
+
+                                        // Query to check if the houseId exists in the rentalinfo table
+                                        $checkQuery = "SELECT * FROM rentalinfo WHERE houseId = $houseId";
+                                        $checkResult = mysqli_query($con, $checkQuery);
+                                        $houseExists = mysqli_num_rows($checkResult) > 0;
+
+                                        // Create a unique ID for each button using the houseId
+                                        $buttonId = 'rentButton_' . $houseId; //-------END------------find id and match
+                                ?>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 mt-4">
+                                            <div class="card fixed-height-card bg-img">
+                                                <h6 class="card-title bg-info text-white p-2 text-uppercase garadien-color"><?php echo $product['name']; ?></h6>
+                                                <div class="card-body">
+                                                    <img src="<?php echo $product['image']; ?>" alt="house" class="img-fluid" id="coverImage">
+
+                                                    <div class="card-padding">
+                                                        <h3 style="color: black"><?php echo $product['amount']; ?></h3>
+                                                        </hr>
+                                                        <h6 style="color: black; font-size: 10px;"><?php echo $product['date']; ?></h6>
+                                                        <h6 class="justified-text" style="color: #36454F;"><?php echo $product['time']; ?></h6>
+                                                    </div>
+                                                </div>
+
+                                                <div class="btn-group d-flex">
+                                                    <button class="btn btn-warning flex-fill text-black">Area ID: <?php echo $houseId; ?></button>
+                                                </div>
+                                            </div>
+                                            <style>
+                                                .fixed-height-card {
+                                                    height: 450px;
+                                                    /* Set the desired fixed height */
+                                                    overflow: hidden;
+                                                    /* Hide any content that exceeds the fixed height */
+                                                }
+
+                                                .text-black{
+                                                    color: black;
+                                                    font-weight: 900;
+                                                }
+
+                                                .justified-text {
+                                                    text-align: justify;
+                                                }
+
+                                                .bg-img {
+                                                    background-color: #F0F8FF;
+                                                }
+
+                                                .card-padding {
+                                                    padding: 5px 5px 0px 5px;
+                                                    background-color: #F0F8FF;
+                                                }
+                                            </style>
+                                        </div>
+                                <?php
+                                    }
+                                } else {
+                                    echo "Error: " . $query . "<br>" . mysqli_error($con);
+                                }
+
+                                // Close the database connection
+                                mysqli_close($con);
+                                ?>
+                                <!--update v=0.2--------------END-->
+                            </div>
+                        </div>
+                        <!--ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff--->
+                    </div>
+                </div>
+                <!-- Clender and vgtID End -->
+
+                <!-- Footer Start -->
+                <?php include "../footer.php"; ?>
+                <!-- Footer End -->
+            </div>
+            <!-- Content End -->
+
+            <!-- Back to Top -->
+            <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        </div>
+
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="lib/chart/chart.min.js"></script>
+        <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/waypoints/waypoints.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+        <script src="lib/tempusdominus/js/moment.min.js"></script>
+        <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+        <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+        <!-- Template Javascript -->
+        <script src="../js/main.js"></script>
+        <script src="../js/script.js"></script>
+        <script src="rent.js"></script>
+</body>
+
+</html>
