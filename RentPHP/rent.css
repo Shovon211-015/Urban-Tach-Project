@@ -1,0 +1,11 @@
+/*card design*/
+.card img{
+    height: 8rem;
+}
+.card .card-body h5{
+    color: black;
+}
+.card .card-body{
+    padding: -10px 0px 0px 0px;
+    margin: 10px 0px 0px 0px;
+}
